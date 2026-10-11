@@ -1,0 +1,63 @@
+/*
+ * Mobile web shell. Owned by Build & Release — if you need to change scaling or
+ * touch behaviour, read docs/mobile-shell.md first.
+ */
+
+:root {
+  /* Mirror the safe-area insets into custom properties so TypeScript can read
+     them with getComputedStyle (env() is not readable directly from JS). */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+
+  --bg: #0e1116;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  overflow: hidden;
+
+  /* No rubber-band scroll, no pull-to-refresh. */
+  overscroll-behavior: none;
+
+  /* All pointer gestures belong to the game, not the browser. This is what
+     stops accidental scrolling and pinch-zoom inside the canvas. */
+  touch-action: none;
+
+  /* No grey flash on tap, no text selection from a long press. */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+
+  /* Avoid iOS auto-inflating font sizes in landscape. */
+  -webkit-text-size-adjust: 100%;
+}
+
+#game {
+  /* dvh tracks the dynamic viewport (collapsing URL bar on mobile Safari /
+     Chrome); the vh line is the fallback for anything older. */
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  position: fixed;
+  inset: 0;
+  /* Deliberately NOT padded by the safe-area insets: the canvas paints
+     edge-to-edge and the game insets its own UI using the values above. */
+}
+
+#game canvas {
+  display: block;
+  /* Phaser sizes the canvas; make sure nothing in CSS fights it. */
+  touch-action: none;
+}

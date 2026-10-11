@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!--
+      viewport-fit=cover  -> the page extends under the notch / home bar so we can
+                             paint edge-to-edge; env(safe-area-inset-*) then tells
+                             us where the unsafe regions are.
+      maximum-scale=1 +
+      user-scalable=no    -> kills pinch-zoom and double-tap-to-zoom, which is what
+                             removes the legacy 300ms tap delay on iOS Safari.
+    -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+
+    <title>1xtra prototype</title>
+    <meta name="description" content="1xtra casual mobile-web prototype." />
+
+    <!-- Standalone / installed appearance -->
+    <meta name="theme-color" content="#0e1116" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="1xtra" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+    <link rel="apple-touch-icon" href="icons/icon-180.png" />
+
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <!-- Phaser mounts its canvas here. Nothing else lives in the DOM. -->
+    <div id="game" aria-label="Game canvas container"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
