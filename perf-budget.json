@@ -1,0 +1,29 @@
+{
+  "$comment": "Enforced by `npm run budget`, and by CI on every push. Raising a ceiling is a deliberate decision, not a formality — say why in the commit message.",
+
+  "firstLoadGzipKB": {
+    "$comment": "Code needed before the first frame. Phaser 3.90 is ~332 kB gzipped on its own and that is the floor; the headroom above it is the game's.",
+    "totalTransfer": 420,
+    "javascript": 400,
+    "css": 15,
+    "largestSingleAsset": 345
+  },
+
+  "runtimeAssetsKB": {
+    "$comment": "Images and audio, raw bytes — already compressed formats, so gzip is not meaningful. These load after first paint, so they cost loading-screen time rather than time-to-first-frame. This is the Art & Audio ceiling.",
+    "total": 1500,
+    "largestSingleAsset": 400
+  },
+
+  "firstLoad": {
+    "$comment": "Derived from the transfer ceiling. 'Slow 4G' is Lighthouse's 1.6 Mbit/s profile; the effective payload rate is ~175 kB/s. Transfer only — real time-to-interactive also includes RTT and JS parse.",
+    "targetSeconds": 3.0,
+    "slow4gKilobytesPerSecond": 175
+  },
+
+  "runtime": {
+    "$comment": "Not machine-checkable in CI. Verified in the on-device test pass and recorded in docs/device-test-log.md.",
+    "targetFps": 60,
+    "minAcceptableFps": 55
+  }
+}

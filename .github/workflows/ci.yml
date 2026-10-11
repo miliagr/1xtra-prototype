@@ -1,0 +1,70 @@
+name: ci
+
+# Every push to main is checked and then published, so the preview URL always
+# matches main. Pull requests are checked but not published — GitHub Pages
+# only hosts one site per repo, so there is no per-PR preview. If we ever need
+# one, that is the point at which we move hosting to Netlify (see README).
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: typecheck, build, perf budget
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npx vite build
+        env:
+          # GitHub Pages serves this repo from /<repo-name>/.
+          VITE_BASE: /${{ github.event.repository.name }}/
+
+      - name: Perf budget
+        run: npm run budget
+
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: deploy preview URL
+    needs: check
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+
+    # Never let two deploys race; queue them instead of cancelling, so the
+    # published site always matches the newest commit that finished.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
