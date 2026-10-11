@@ -13,17 +13,34 @@ How to run a pass:
 
 | Date | Build | Device | Browser | Cold load | FPS (min) | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| | | | | | | _no pass recorded yet — see below_ |
+| | | | | | | _no hardware pass recorded yet — see below_ |
+
+## What has been verified so far
+
+Scaffold commit, against the live Pages URL, in headless Chrome emulating an
+iPhone 14 Pro (393x852 CSS px, DPR 3, touch events):
+
+- Boots on WebGL, no console errors, no failed requests.
+- Canvas is exactly 393x852 — fills the viewport, no letterboxing, no scroll
+  (`scrollHeight` equals viewport height).
+- `touch-action: none` and `overscroll-behavior: none` both resolve as
+  intended, so no scroll, pinch-zoom or pull-to-refresh.
+- Synthetic taps on the circle increment the counter and flip its colour; a tap
+  outside the circle correctly does not register.
+- Rotating to landscape and back re-runs the layout and re-centres cleanly.
 
 ## Outstanding
 
-The scaffold has been verified in a desktop browser at phone viewport sizes
-(portrait, landscape, rotation, notch insets simulated). **It has not yet been
-run on physical hardware.** The first real pass needs a phone in hand:
+**Nothing here has run on physical hardware**, and two targets cannot be
+confirmed without it:
 
-- one mid-range Android (the 60fps target is set by this class of device)
-- one iPhone with a notch or dynamic island (the safe-area handling is only
-  truly proven here)
+- **60fps on mid-range Android.** Headless Chrome on a Mac says nothing useful
+  about this. Needs one mid-range device — that class of hardware is what the
+  target is set by.
+- **Safe-area insets.** Chrome's device emulation reports insets of 0, so the
+  notch and home-bar handling is correct by construction but unproven. Needs
+  one iPhone with a dynamic island, in Safari, ideally also added to the home
+  screen (standalone mode has different insets than the browser).
 
-Until those two rows exist, treat the FPS and cold-load numbers as predicted,
-not measured.
+Until both rows exist, treat the FPS and cold-load figures in the README as
+predicted, not measured.

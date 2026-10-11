@@ -81,6 +81,11 @@ Three things worth knowing about these numbers:
   [docs/device-test-log.md](docs/device-test-log.md), which currently has no
   rows in it. Treat the fps and cold-load figures as predicted until it does.
 
+One measurement caveat: the budget checker compresses at gzip level 9, while
+GitHub Pages serves at a lower level. The Phaser chunk measures 322.7 kB here
+and arrives as 325.9 kB on the wire — about 1% more. The numbers are consistent
+for tracking growth, just don't read the last kilobyte as gospel.
+
 Raising a ceiling is a deliberate decision. Say why in the commit message.
 
 ## Deploys
@@ -89,6 +94,12 @@ Every push to `main` runs typecheck → build → perf budget, and publishes to 
 URL above if all three pass. There is no per-PR preview URL: GitHub Pages hosts
 one site per repo. Pull requests still get the full check, just not a
 deployment.
+
+**If your phone still shows the old build**, it is almost certainly one of two
+caches. GitHub Pages sends `cache-control: max-age=600`, so the HTML can be up
+to 10 minutes stale on a device that already loaded it. Our own service worker
+is network-first and shouldn't be the culprit, but to rule both out at once,
+load the URL with `?nosw=1`.
 
 Hosting is GitHub Pages on the free tier — no paid infrastructure, no accounts
 beyond the GitHub one that already existed. **The repo is public**, because
