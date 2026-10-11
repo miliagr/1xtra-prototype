@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.DS_Store
+*.local
+.vite/
+
+# Capacitor (see docs/native-path.md) — generated, never committed
+ios/
+android/
